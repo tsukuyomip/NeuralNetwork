@@ -68,25 +68,31 @@ class PGM(object):
         #self.y = y  # __init__()で．
         return y
 
-    def y_gen_normal(self, x, sigma, rng):
+    def y_gen_normal(self, x = 0.0, sigma = 1.0, rng):
+        """yの値をひとつ生成する．"""
         return rng.normal(x, sigma)
 
     def gauss(self, x, mu = 0.0, sigma = 1.0):
+        """gauss関数の値を返す．
+        今回は確率密度関数p(y|x)の値を取得する際に使用．"""
         return 1/(np.sqrt(2*np.pi)*self.sigma)*np.exp(-(x - mu)*(x - mu)/(2*self.sigma*self.sigma))
 
     def compute_S_mean(self, index = None):
+        """y[index]の平均を返す．"""
         if index is None:
             print >> sys.stderr,  "warning(PGM.compute_S): index is None."
             return None
         return np.mean(self.y[index])
 
     def compute_S_false(self, index = None):
+        """常にFalse（0.0）を返す"""
         if index is None:
             print >> sys.stderr,  "warning(PGM.compute_S): index is None."
             return None
         return 0.0
 
     def compute_S_true(self, index = None):
+        """常にTrue（1.0）を返す"""
         if index is None:
             print >> sys.stderr,  "warning(PGM.compute_S): index is None."
             return None
