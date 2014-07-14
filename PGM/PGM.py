@@ -68,8 +68,11 @@ class PGM(object):
         #self.y = y  # __init__()で．
         return y
 
-    def y_gen_normal(self, x = 0.0, sigma = 1.0, rng):
-        """yの値をひとつ生成する．"""
+    def y_gen_normal(self, x = 0.0, sigma = 1.0, rng = None):
+        """xをもとにyの値をひとつ生成する．（平均x 分散sigma の正規分布）"""
+        if rng is None:
+            print >> sys.stderr,  "warning(PGM.y_gen_normal): rng is None. set 'rng' to 'np.random'"
+            rng = np.random
         return rng.normal(x, sigma)
 
     def gauss(self, x, mu = 0.0, sigma = 1.0):
@@ -97,3 +100,18 @@ class PGM(object):
             print >> sys.stderr,  "warning(PGM.compute_S): index is None."
             return None
         return 1.0
+
+    def compute_S_god(self, index = None):
+        """課題6のh_G()により，Sを計算"""
+
+        h = 0.0
+        for i in xrange(len(self.state_x)):
+            x = self.state_x[i]
+            tmpsum = 0.0
+            for j in xrange(self.n_x):
+                for k in xrange(sum(self.n_y)):
+                    tmpsum += (1.0 - 2*self.y[index][k] + 2*self.y[index][k]*x[j] - x[j]*x[j])
+            tmpsum = tmpsum/(2*self.sigma*self.sigma)
+
+            h += self.p_x[i]*np.exp(tmpsum)/self.p_x[self.check_index]
+        return 1.0/h
