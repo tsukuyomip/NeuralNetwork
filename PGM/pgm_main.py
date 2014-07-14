@@ -5,7 +5,7 @@ import PGM
 
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
-    n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点に対応．
+    n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
     pgm = PGM.PGM(n_generate = 100000, sigma = 1.0, rng = rng)
 
     # 目的とするパターンが何個出てきたか
@@ -18,10 +18,20 @@ if __name__ == "__main__":
         n_FP = 0
         n_CD = 0
 
-        # すべてのパターンx[i]について，sを計算
+        min_s = 1.0
+        max_s = 0.0
         for i in range(pgm.n_generate):
             s = pgm.compute_S_mean(index = i)
+            if max_s < s:
+                max_s = s
+            if min_s > s:
+                min_s = s
+
+        # すべてのパターンx[i]について，sを計算
+        for i in range(pgm.n_generate):
+            s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
             #s = rng.rand()
+            #s = pgm.compute_S_god(index = i)
             if s > theta:
                 z = 1
             else:
