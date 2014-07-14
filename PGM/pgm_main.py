@@ -29,9 +29,9 @@ if __name__ == "__main__":
 
         # すべてのパターンx[i]について，sを計算
         for i in range(pgm.n_generate):
-            s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
+            #s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
             #s = rng.rand()
-            #s = pgm.compute_S_god(index = i)
+            s = pgm.compute_S_god(index = i)
             if s > theta:
                 z = 1
             else:
