@@ -11,38 +11,41 @@ if __name__ == "__main__":
     # 目的とするパターンが何個出てきたか
     print >> sys.stderr,  "n_appear =", pgm.n_appear
 
+    s_index = 0
+
+    #min_s = 1.0
+    #max_s = 0.0
+    #for i in range(pgm.n_generate):
+    #    s = pgm.compute_S_mean(index = i)
+    #    if max_s < s:
+    #        max_s = s
+    #    if min_s > s:
+    #        min_s = s
+
+    # すべてのパターンx[i]について，sを計算
+    s = []
+    for i in range(pgm.n_generate):
+        #s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
+        #s = rng.rand()
+        s.append((pgm.compute_S_god(index = i), i))
+    s = sorted(s, key = lambda x:x[0], reverse=True)
 
     for t in range(0, n_loop_theta + 1):
-        theta = float(t) / n_loop_theta
-
         n_FP = 0
         n_CD = 0
 
-        #min_s = 1.0
-        #max_s = 0.0
-        #for i in range(pgm.n_generate):
-        #    s = pgm.compute_S_mean(index = i)
-        #    if max_s < s:
-        #        max_s = s
-        #    if min_s > s:
-        #        min_s = s
+        theta = float(t) / n_loop_theta
 
-        # すべてのパターンx[i]について，sを計算
-        for i in range(pgm.n_generate):
-            #s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
-            #s = rng.rand()
-            s = pgm.compute_S_god(index = i)
-            if s > theta:
-                z = 1
-            else:
-                z = 0
+        for s_index in xrange(len(s)):
+            if s[s_index][0] < theta:
+                break
 
             # x[i]をTrueだと判断した場合にCDかFPをカウント
-            if z == 1:
-                if pgm.x[i] == pgm.state_x[pgm.check_index]:
-                    n_CD += 1
-                else:
-                    n_FP += 1
+            if pgm.x[s[s_index][1]] == pgm.state_x[pgm.check_index]:
+                n_CD += 1
+            else:
+                n_FP += 1
+            s_index += 1
 
         print >> sys.stderr,  "theta =", theta
         print >> sys.stderr,  "\tn_FP =", n_CD
