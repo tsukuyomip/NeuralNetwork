@@ -18,14 +18,14 @@ if __name__ == "__main__":
         n_FP = 0
         n_CD = 0
 
-        min_s = 1.0
-        max_s = 0.0
-        for i in range(pgm.n_generate):
-            s = pgm.compute_S_mean(index = i)
-            if max_s < s:
-                max_s = s
-            if min_s > s:
-                min_s = s
+        #min_s = 1.0
+        #max_s = 0.0
+        #for i in range(pgm.n_generate):
+        #    s = pgm.compute_S_mean(index = i)
+        #    if max_s < s:
+        #        max_s = s
+        #    if min_s > s:
+        #        min_s = s
 
         # すべてのパターンx[i]について，sを計算
         for i in range(pgm.n_generate):
