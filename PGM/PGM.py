@@ -168,3 +168,59 @@ class PGM(object):
         pr2 = 1.0/(1.0 + (self.p_x[2]/self.p_x[3])*np.exp(tmpsum))
 
         return pr1*pr2
+
+    def compute_S_saccade(self, index = None, theta = None):
+        """課題8のh_P()により，Sを計算．"""
+        if index is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): index is None."
+            return None
+
+        if theta is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): theta is None. set theta to 0.0"
+            theta = 0.0
+
+        n_computed_y = 0
+
+        # X_1についてのPr(X_1 = 1|y^1)を計算．
+        tmpsum = 0.0
+        for i in xrange(self.n_y[0]):
+            tmpsum += 1.0 - 2*self.y[index][i]
+        tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+        pr1 = 1.0/(1.0 + ((1.0 - self.Pr_Xis1[0])/self.Pr_Xis1[0])*np.exp(tmpsum))
+        n_computed_y += self.n_y[0]
+
+        # X_2についてのPr(X_2 = 1|y^2)を計算．
+        tmpsum = 0.0
+        for i in xrange(self.n_y[1]):
+            tmpsum += 1.0 - 2*self.y[index][n_computed_y + i]
+        tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+        pr2 = 1.0/(1.0 + ((1.0 - self.Pr_Xis1[1])/self.Pr_Xis1[1])*np.exp(tmpsum))
+
+        if pr1 > pr2:
+            if pr1 < theta:
+                return 0.0
+            k = 0
+        else:
+            if pr2 < theta:
+                return 0.0
+            k = 1
+
+
+        # 残った方についてのPrを計算．
+        if k == 0:  # X_1が勝ったら
+            tmpsum = 0.0
+            for i in xrange(self.n_y[1]):
+                tmpsum += 1.0 - 2*self.y[index][n_computed_y + i]
+            tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+            pr2 = 1.0/(1.0 + (self.p_x[2]/self.p_x[3])*np.exp(tmpsum))
+
+        elif k == 1:  # X_2が勝ったら
+            tmpsum = 0.0
+            for i in xrange(self.n_y[0]):
+                tmpsum += 1.0 - 2*self.y[index][i]
+            tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+            pr1 = 1.0/(1.0 + (self.p_x[1]/self.p_x[3])*np.exp(tmpsum))
+
+
+        return pr1*pr2
+
