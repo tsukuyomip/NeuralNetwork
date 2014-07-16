@@ -6,7 +6,7 @@ import PGM
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
     n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
-    pgm = PGM.PGM(n_generate = 100000, n_y = [3, 4],  sigma = 1.0, rng = rng)
+    pgm = PGM.PGM(n_generate = 100000, n_y = [6, 7],  sigma = 1.0, rng = rng)
 
     # 目的とするパターンが何個出てきたか
     print >> sys.stderr,  "n_appear =", pgm.n_appear
