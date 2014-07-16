@@ -14,6 +14,8 @@ class PGM(object):
                  n_generate = 1000, rng = None):
         p_y = self.y_gen_normal
 
+        self.Pr_Xis1 = [p_x[3]+p_x[2], p_x[3] + p_x[1]]  # 手入力……きたない……
+
         if rng is None:
             print >> sys.stderr,  "warning(PGM.__init__): rng is None."
             rng = np.random
@@ -99,10 +101,14 @@ class PGM(object):
         if index is None:
             print >> sys.stderr,  "warning(PGM.compute_S): index is None."
             return None
+
         return 1.0
 
     def compute_S_god(self, index = None):
         """課題6のh_G()により，Sを計算"""
+        if index is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): index is None."
+            return None
 
         h = 0.0
         for i in xrange(len(self.state_x)):
@@ -118,6 +124,10 @@ class PGM(object):
 
     def compute_S_template(self, index = None):
         """課題7のh_T()により，Sを計算．"""
+        if index is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): index is None."
+            return None
+
         tmpsum = 0.0
         for i in xrange(sum(self.n_y)):
             tmpsum += 1.0 - 2*self.y[index][i]
@@ -125,3 +135,36 @@ class PGM(object):
         h = 1.0 + (self.p_x[0]/self.p_x[3])*np.exp(tmpsum)
         return 1.0/h
 
+
+    def compute_S_parts1(self, index = None, theta = None):
+        """課題8のh_P()により，Sを計算．"""
+        if index is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): index is None."
+            return None
+
+        if theta is None:
+            print >> sys.stderr,  "warning(PGM.compute_S): theta is None. set theta to 0.0"
+            theta = 0.0
+
+        n_computed_y = 0
+
+        # 0番素子についてのPrを計算．
+        tmpsum = 0.0
+        for i in xrange(self.n_y[0]):
+            tmpsum += 1.0 - 2*self.y[index][i]
+        tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+        pr1 = 1.0/(1.0 + ((1.0 - self.Pr_Xis1[0])/self.Pr_Xis1[0])*np.exp(tmpsum))
+
+        n_computed_y += self.n_y[0]
+
+        if pr1 < theta:
+            return 0.0
+
+        # 1番素子についてのPrを計算．
+        tmpsum = 0.0
+        for i in xrange(self.n_y[1]):
+            tmpsum += 1.0 - 2*self.y[index][n_computed_y + i]
+        tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+        pr2 = 1.0/(1.0 + (self.p_x[2]/self.p_x[3])*np.exp(tmpsum))
+
+        return pr1*pr2
