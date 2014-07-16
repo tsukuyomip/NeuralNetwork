@@ -27,8 +27,8 @@ if __name__ == "__main__":
     for i in range(pgm.n_generate):
         #s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
         #s = rng.rand()
-        s.append((pgm.compute_S_god(index = i), i))
-        #s.append((pgm.compute_S_template(index = i), i))
+        #s.append((pgm.compute_S_god(index = i), i))
+        s.append((pgm.compute_S_template(index = i), i))
         #s.append((pgm.compute_S_parts1(index = i, theta = 0.0), i))
     s = sorted(s, key = lambda x:x[0], reverse=True)
 
