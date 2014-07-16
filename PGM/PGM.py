@@ -111,7 +111,17 @@ class PGM(object):
             for j in xrange(self.n_x):
                 for k in xrange(sum(self.n_y)):
                     tmpsum += (1.0 - 2*self.y[index][k] + 2*self.y[index][k]*x[j] - x[j]*x[j])
-            tmpsum = tmpsum/(2*self.sigma*self.sigma)
+            tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
 
             h += self.p_x[i]*np.exp(tmpsum)/self.p_x[self.check_index]
         return 1.0/h
+
+    def compute_S_template(self, index = None):
+        """課題7のh_T()により，Sを計算．"""
+        tmpsum = 0.0
+        for i in xrange(sum(self.n_y)):
+            tmpsum += 1.0 - 2*self.y[index][i]
+        tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
+        h = 1.0 + (self.p_x[0]/self.p_x[3])*np.exp(tmpsum)
+        return 1.0/h
+
