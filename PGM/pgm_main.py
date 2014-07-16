@@ -6,7 +6,7 @@ import PGM
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
     n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
-    pgm = PGM.PGM(n_generate = 100000, n_y = [5, 5],  sigma = 1.0, rng = rng)
+    pgm = PGM.PGM(n_generate = 100000, n_y = [20, 20],  sigma = 1.0, rng = rng)
 
     # 目的とするパターンが何個出てきたか
     print >> sys.stderr,  "n_appear =", pgm.n_appear
@@ -28,8 +28,8 @@ if __name__ == "__main__":
         #s = (pgm.compute_S_mean(index = i) - min_s)/(max_s - min_s)
         #s = rng.rand()
         #s.append((pgm.compute_S_god(index = i), i))
-        #s.append((pgm.compute_S_template(index = i), i))
-        s.append((pgm.compute_S_parts1(index = i, theta = 0.0), i))
+        s.append((pgm.compute_S_template(index = i), i))
+        #s.append((pgm.compute_S_parts1(index = i, theta = 0.0), i))
     s = sorted(s, key = lambda x:x[0], reverse=True)
 
     for t in range(0, n_loop_theta + 1):
@@ -50,8 +50,8 @@ if __name__ == "__main__":
             s_index += 1
 
         print >> sys.stderr,  "theta =", theta
-        print >> sys.stderr,  "\tn_FP =", n_CD
-        print >> sys.stderr,  "\tn_CD =", n_FP
+        print >> sys.stderr,  "\tn_CD =", n_CD
+        print >> sys.stderr,  "\tn_FP =", n_FP
 
         fpr = float(n_FP)/(pgm.n_generate - pgm.n_appear)
         cdr = float(n_CD)/pgm.n_appear
