@@ -6,13 +6,20 @@ import numpy as np
 class PGM(object):
     def __init__(self, 
                  n_x = 2, n_y = [3, 4], 
-                 state_x = [[0, 0], [0, 1], [1, 0], [1, 1]], 
                  check_index = 3, 
                  p_x = [0.6, 0.1, 0.1, 0.2], 
                  p_y = None,
                  sigma = 1.0, 
                  n_generate = 1000, rng = None):
         p_y = self.y_gen_normal
+
+        self.n_x = n_x
+        self.n_y = n_y
+        self.check_index = check_index
+        self.p_x = p_x
+        self.p_y =p_y
+        self.sigma = sigma
+        self.n_generate = n_generate
 
         self.Pr_Xis1 = [p_x[3]+p_x[2], p_x[3] + p_x[1]]  # 手入力……きたない……
 
@@ -21,26 +28,25 @@ class PGM(object):
             rng = np.random
 
         # パターンを n_generate 個生成．
-        (x, n_appear) = self.generate_x(n_generate, p_x, state_x, check_index, rng)
+        (x, n_appear) = self.generate_x(n_generate, p_x, check_index, rng)
 
         # 各x[i]に対してy[i][j]を生成
         y = self.generate_y(n_generate, n_y, p_y, x, sigma, rng)
-
-        self.n_x = n_x
-        self.n_y = n_y
-        self.state_x = state_x
-        self.check_index = check_index
-        self.p_x = p_x
-        self.p_y =p_y
-        self.sigma = sigma
-        self.n_generate = n_generate
 
         self.x = x
         self.y = y
         self.n_appear = n_appear
 
 
-    def generate_x(self, n_generate, p_x, state_x, check_index, rng):
+    def i2bl(self, x = 0):
+            retl = [0] * self.n_x
+            for i in range(self.n_x):
+                retl[-(i + 1)] = x % 2
+                x /= 2
+            return retl
+
+
+    def generate_x(self, n_generate, p_x, check_index, rng):
         x = []
         n_appear = 0
 
@@ -49,7 +55,7 @@ class PGM(object):
             for state_index in xrange(len(p_x)):
                 r -= p_x[state_index]
                 if r < 0.0:
-                    x.append(state_x[state_index])
+                    x.append(self.i2bl(state_index))
                     if state_index == check_index:
                         n_appear += 1
                     break
@@ -111,8 +117,8 @@ class PGM(object):
             return None
 
         h = 0.0
-        for i in xrange(len(self.state_x)):
-            x = self.state_x[i]
+        for i in xrange(2 ** self.n_x):
+            x = self.i2bl(i)
             tmpsum = 0.0
             for j in xrange(self.n_x):
                 for k in xrange(sum(self.n_y)):
