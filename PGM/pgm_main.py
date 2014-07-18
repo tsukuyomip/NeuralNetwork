@@ -3,6 +3,9 @@
 import sys, numpy as np
 import PGM
 
+def new_func(x):
+    print "new function!", x
+
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
     n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
