@@ -9,7 +9,8 @@ def new_func(x):
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
     n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
-    pgm = PGM.PGM(n_generate = 100000, n_y = [5, 5],  sigma = 0.5, rng = rng)
+    pgm = PGM.PGM(n_generate = 100000, n_y = [20, 20],  sigma = 1.0, rng = rng)
+    correct_pat = pgm.i2bl(pgm.check_index)
 
     # 目的とするパターンが何個出てきたか
     print >> sys.stderr,  "n_appear =", pgm.n_appear
@@ -47,11 +48,10 @@ if __name__ == "__main__":
                 break
 
             # x[i]をTrueだと判断した場合にCDかFPをカウント
-            if pgm.x[s[s_index][1]] == pgm.state_x[pgm.check_index]:
+            if pgm.x[s[s_index][1]] == correct_pat:
                 n_CD += 1
             else:
                 n_FP += 1
-            s_index += 1
 
         print >> sys.stderr,  "theta =", theta
         print >> sys.stderr,  "\tn_CD =", n_CD
