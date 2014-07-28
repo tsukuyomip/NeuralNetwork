@@ -9,7 +9,7 @@ def new_func(x):
 if __name__ == "__main__":
     rng = np.random.RandomState(2294322)
     n_loop_theta = 100  # thetaの増分は(1.0/n_loop_theta)．プロット点の数に対応．
-    pgm = PGM.PGM(n_generate = 100000, n_y = [20, 20],  sigma = 1.0, rng = rng)
+    pgm = PGM.PGM(n_generate = 100000, n_y = [5, 5],  sigma = 2.0, rng = rng)
     correct_pat = pgm.i2bl(pgm.check_index)
 
     # 目的とするパターンが何個出てきたか

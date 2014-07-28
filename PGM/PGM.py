@@ -119,10 +119,12 @@ class PGM(object):
         h = 0.0
         for i in xrange(2 ** self.n_x):
             x = self.i2bl(i)
+            n_fin_y = 0
             tmpsum = 0.0
             for j in xrange(self.n_x):
-                for k in xrange(sum(self.n_y)):
-                    tmpsum += (1.0 - 2*self.y[index][k] + 2*self.y[index][k]*x[j] - x[j]*x[j])
+                for k in xrange(self.n_y[j]):
+                    tmpsum += (1.0 - 2*self.y[index][n_fin_y + k] + 2*self.y[index][n_fin_y + k]*x[j] - x[j]*x[j])
+                n_fin_y += self.n_y[j]
             tmpsum = tmpsum/(2.0*self.sigma*self.sigma)
 
             h += self.p_x[i]*np.exp(tmpsum)/self.p_x[self.check_index]
